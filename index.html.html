@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Poster Evaluation — Workshop in Metabolism, Inflammation &amp; the Microbiome</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+:root{
+  --sea-pale:#E8F0EE;
+  --ink:#0C2320;
+  --ink-soft:#557069;
+  --rule:#CDDCD8;
+  --teal:#0E7C6B;
+  --teal-wash:#D5E9E3;
+  --deep:#063B3A;
+  --sand:#E0A62E;
+  --coral:#A8412C;
+  --white:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--sea-pale);color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;padding-bottom:4rem;
+}
+.wrap{max-width:430px;margin:0 auto;padding:0 1.1rem}
+.wrap.wide{max-width:1020px}
+
+header{background:var(--deep);color:var(--white);position:sticky;top:0;z-index:20}
+.bar{max-width:1020px;margin:0 auto;padding:.8rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.brand{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.05rem;line-height:1.2;max-width:26ch}
+.brand em{font-style:normal;color:var(--sand)}
+.tabs{display:flex;gap:.15rem}
+.tab{font:inherit;font-size:.85rem;background:none;border:none;cursor:pointer;color:#8FB5AE;padding:.35rem .65rem;border-radius:3px}
+.tab:hover{color:var(--white)}
+.tab[aria-selected="true"]{background:rgba(255,255,255,.14);color:var(--white);font-weight:600}
+
+/* shoreline illustration */
+.shore{display:block;width:100%;height:auto;margin-top:-1px}
+
+section{display:none}
+section.on{display:block}
+.card{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:1.15rem;margin-top:1.1rem}
+h2{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.5rem;line-height:1.25;margin-bottom:.3rem}
+h3{font-size:.95rem;font-weight:600;margin-bottom:.4rem}
+p.note{color:var(--ink-soft);font-size:.9rem;max-width:64ch}
+label{display:block;font-size:.88rem;font-weight:500;margin-bottom:.3rem}
+input[type=text],input[type=password],input[type=url],textarea{
+  width:100%;font:inherit;padding:.6rem .7rem;border:1px solid var(--rule);border-radius:4px;background:var(--white);color:var(--ink);
+}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+textarea{min-height:5rem;resize:vertical}
+.btn{font:inherit;font-weight:600;font-size:1rem;width:100%;padding:.85rem 1rem;border:none;border-radius:4px;background:var(--teal);color:var(--white);cursor:pointer}
+.btn:disabled{background:var(--rule);color:var(--ink-soft);cursor:not-allowed}
+.btn.ghost{background:none;border:1px solid var(--rule);color:var(--ink);font-weight:500}
+.btn.warn{background:none;border:1px solid var(--rule);color:var(--coral);font-weight:500;font-size:.88rem;padding:.6rem}
+.inline{width:auto;padding:.55rem .9rem;font-size:.85rem}
+
+.code-field{font-family:'IBM Plex Mono',monospace;font-size:2.6rem;font-weight:600;text-align:center;letter-spacing:.22em;text-transform:uppercase;padding:.7rem .4rem .7rem .62rem}
+.code-now{font-family:'IBM Plex Mono',monospace;font-size:1.6rem;font-weight:600;letter-spacing:.14em;color:var(--teal)}
+
+.crit{padding:.95rem 0;border-top:1px solid var(--rule)}
+.crit:first-of-type{border-top:none;padding-top:.2rem}
+.crit-name{font-size:.98rem;font-weight:600;line-height:1.3}
+.crit-desc{font-size:.82rem;color:var(--ink-soft);margin:.15rem 0 .6rem;max-width:60ch}
+.scores{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem}
+.score{font:inherit;font-weight:600;font-size:1.05rem;aspect-ratio:1/1;min-height:52px;border:1px solid var(--rule);border-radius:4px;background:var(--white);color:var(--ink-soft);cursor:pointer;transition:background .12s,color .12s}
+.score[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.score.filled{background:var(--teal-wash);border-color:var(--teal-wash);color:var(--teal)}
+.anchors{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-soft);margin-top:.3rem}
+
+.msg{font-size:.86rem;padding:.7rem .8rem;border-radius:4px;background:var(--teal-wash);color:var(--deep);margin-top:.9rem}
+.msg.bad{background:#F5E1DC;color:var(--coral)}
+.done{background:var(--teal);color:var(--white);border-radius:8px;padding:1.3rem;margin-top:1.1rem;display:flex;align-items:center;gap:.9rem;animation:pop .28s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:500;background:var(--teal-wash);color:var(--deep);padding:.25rem .5rem;border-radius:3px}
+.chip.off{background:var(--sea-pale);color:var(--ink-soft)}
+
+table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:.6rem}
+th{text-align:left;font-weight:600;font-size:.76rem;color:var(--ink-soft);padding:.4rem .5rem;border-bottom:1px solid var(--rule)}
+td{padding:.5rem;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.top td{background:var(--teal-wash)}
+.mono{font-family:'IBM Plex Mono',monospace;font-weight:500}
+.rank{font-family:'Fraunces',Georgia,serif;font-size:1.1rem}
+
+.labels{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-top:1rem}
+.label{border:1px dashed var(--ink-soft);border-radius:6px;padding:.7rem;text-align:center;background:var(--white);break-inside:avoid}
+.label canvas,.label img{width:100%!important;height:auto!important;max-width:112px;margin:0 auto}
+.label .short{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;letter-spacing:.1em;margin-top:.35rem}
+.label .seq{font-size:.7rem;color:var(--ink-soft)}
+#bigQr{display:flex;justify-content:center;margin-top:1rem}
+#bigQr canvas,#bigQr img{width:230px!important;height:230px!important}
+
+@media print{
+  body{background:#fff;padding:0}
+  header,.noprint{display:none!important}
+  .card{border:none;padding:0;margin:0}
+  .wrap{max-width:none;padding:0}
+  .labels{grid-template-columns:repeat(4,1fr);gap:.4rem}
+  .label{border:1px dashed #999}
+}
+</style>
+
+<header>
+  <div class="bar">
+    <div class="brand">Workshop in Metabolism, Inflammation &amp; the Microbiome<br><em>Poster evaluation</em></div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-go="evaluate">Evaluate</button>
+      <button class="tab" role="tab" aria-selected="false" data-go="results">Results</button>
+      <button class="tab" role="tab" aria-selected="false" data-go="print">Print</button>
+    </nav>
+  </div>
+</header>
+
+<svg class="shore" viewBox="0 0 430 96" preserveAspectRatio="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <rect width="430" height="96" fill="#063B3A"/>
+  <circle cx="372" cy="26" r="15" fill="#E0A62E" opacity=".9"/>
+  <!-- bacterium with flagella -->
+  <g transform="translate(48,40) rotate(-9)">
+    <rect x="-22" y="-11" width="44" height="22" rx="11" fill="#D5E9E3"/>
+    <circle cx="-6" cy="-2" r="2.1" fill="#063B3A"/><circle cx="6" cy="-2" r="2.1" fill="#063B3A"/>
+    <path d="M-5 5 q5 4 10 0" stroke="#063B3A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M22 -4 q9 -3 15 3 M22 2 q10 2 16 -3 M22 8 q8 5 15 1" stroke="#D5E9E3" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".75"/>
+  </g>
+  <!-- coccus cluster -->
+  <g transform="translate(160,32)">
+    <circle cx="0" cy="0" r="11" fill="#E0A62E" opacity=".85"/>
+    <circle cx="15" cy="7" r="8" fill="#E0A62E" opacity=".55"/>
+    <circle cx="-13" cy="8" r="6.5" fill="#E0A62E" opacity=".4"/>
+    <circle cx="-3.5" cy="-1.5" r="1.8" fill="#063B3A"/><circle cx="3.5" cy="-1.5" r="1.8" fill="#063B3A"/>
+    <path d="M-3 4 q3 3 6 0" stroke="#063B3A" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- small molecule ring -->
+  <g transform="translate(268,34)" stroke="#D5E9E3" stroke-width="1.7" fill="none" opacity=".8">
+    <path d="M0 -12 L10 -6 L10 6 L0 12 L-10 6 L-10 -6 Z"/>
+    <path d="M10 -6 L20 -12 M-10 6 L-20 12"/>
+    <circle cx="20" cy="-12" r="2.6" fill="#D5E9E3"/><circle cx="-20" cy="12" r="2.6" fill="#D5E9E3"/>
+  </g>
+  <!-- waves -->
+  <path d="M0 66 q26 -9 52 0 t52 0 t52 0 t52 0 t52 0 t52 0 t52 0 t52 0 V96 H0 Z" fill="#0E7C6B" opacity=".55"/>
+  <path d="M0 78 q26 -9 52 0 t52 0 t52 0 t52 0 t52 0 t52 0 t52 0 t52 0 V96 H0 Z" fill="#E8F0EE"/>
+</svg>
+
+<!-- ============ EVALUATE ============ -->
+<section id="evaluate" class="on">
+  <div class="wrap">
+
+    <div class="card" id="cardWho">
+      <h2>Who is evaluating?</h2>
+      <p class="note">Your name stays on this device. You type it once, at the start of the session.</p>
+      <div style="margin-top:.9rem">
+        <label for="judgeName">Full name</label>
+        <input type="text" id="judgeName" autocomplete="name" placeholder="e.g. Larissa Bueno">
+      </div>
+      <button class="btn" id="btnStart" style="margin-top:.9rem">Start evaluating</button>
+    </div>
+
+    <div class="card" id="cardCode" hidden>
+      <h2>Poster code</h2>
+      <p class="note">Four characters, printed on the panel label.</p>
+      <input type="text" id="codeInput" class="code-field" maxlength="4" inputmode="text"
+             autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="––––">
+      <div id="codeError"></div>
+      <button class="btn" id="btnOpen" style="margin-top:.6rem">Open scoring sheet</button>
+      <div id="myList"></div>
+    </div>
+
+    <div class="card" id="cardSheet" hidden>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem">
+        <span class="code-now" id="codeNow"></span>
+        <button class="tab" id="btnSwitch" style="color:var(--ink-soft);padding:.2rem .4rem">change poster</button>
+      </div>
+      <div id="linkedTitle" class="note" style="margin-top:.2rem"></div>
+      <div id="rubric" style="margin-top:.9rem"></div>
+      <div id="commentBox" style="margin-top:.4rem">
+        <label for="comment">Comment for the presenter (optional)</label>
+        <textarea id="comment" placeholder="What the work does well, and what would make it stronger."></textarea>
+      </div>
+      <button class="btn" id="btnSave" style="margin-top:.9rem" disabled>Save score</button>
+      <button class="btn warn" id="btnConflict" style="margin-top:.5rem;width:100%">I have a conflict of interest with this work</button>
+      <div id="saveStatus"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="results">
+  <div class="wrap wide">
+    <div class="card" id="cardPass">
+      <h2>Committee area</h2>
+      <p class="note">Standings are kept behind a password so evaluators don't see them during the session.</p>
+      <div style="margin-top:.9rem;max-width:300px">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" autocomplete="off">
+      </div>
+      <button class="btn" id="btnPass" style="margin-top:.9rem;max-width:300px">Open results</button>
+      <div id="passError"></div>
+    </div>
+
+    <div id="panel" hidden>
+      <div class="card">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.6rem">
+          <h2>Standings</h2>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn ghost inline" id="btnRefresh">Refresh</button>
+            <button class="btn ghost inline" id="btnCsv">Download spreadsheet</button>
+          </div>
+        </div>
+        <p class="note" id="overview"></p>
+        <div id="rankTable"></div>
+      </div>
+
+      <div class="card">
+        <h3>How each evaluator scores</h3>
+        <p class="note">A consistently generous or harsh judge shifts the raw mean. The adjusted column corrects for that by centring each judge's own scores.</p>
+        <div id="judgeTable"></div>
+      </div>
+
+      <div class="card">
+        <h3>Link codes to abstracts</h3>
+        <p class="note">Fill this in whenever the list is ready. One poster per line, separated by semicolons: code; title; presenter; category.</p>
+        <textarea id="mapText" style="min-height:8rem;font-family:'IBM Plex Mono',monospace;font-size:.82rem;margin-top:.5rem"
+                  placeholder="K7M2; Deoxycholic acid shapes the postprandial response; A. Souza; MSc"></textarea>
+        <button class="btn ghost" id="btnSaveMap" style="margin-top:.6rem">Save links</button>
+        <div id="mapStatus"></div>
+      </div>
+
+      <div class="card">
+        <h3>Comments for presenters</h3>
+        <div id="commentList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRINT ============ -->
+<section id="print">
+  <div class="wrap wide">
+
+    <div class="card noprint">
+      <h2>Link to this tool</h2>
+      <p class="note">Paste the published address below to get a QR code for the badges, the programme, or a sign at the entrance of the poster hall. Leave it empty until the tool is online.</p>
+      <div style="margin-top:.9rem;max-width:520px">
+        <label for="baseUrl">Published address</label>
+        <input type="url" id="baseUrl" placeholder="https://yourname.github.io/poster-evaluation/" autocomplete="off">
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap">
+        <button class="btn ghost inline" id="btnMakeQr">Create access QR</button>
+        <button class="btn ghost inline" id="btnSaveUrl">Save address</button>
+      </div>
+      <div id="bigQr"></div>
+      <div id="urlStatus"></div>
+      <div class="msg">Once the address is saved, the panel labels below encode a direct link. Scanning one opens the scoring sheet with that poster already selected, so nobody types anything.</div>
+    </div>
+
+    <div class="card noprint">
+      <h2>Panel labels</h2>
+      <p class="note">Every label carries the QR code and the same code in large type. Cut them apart and tape one to each panel before the session opens.</p>
+      <div style="display:flex;gap:.8rem;align-items:end;flex-wrap:wrap;margin-top:.9rem">
+        <div style="width:130px">
+          <label for="labelCount">How many</label>
+          <input type="text" id="labelCount" inputmode="numeric" value="40">
+        </div>
+        <button class="btn ghost inline" id="btnMake">Generate</button>
+        <button class="btn ghost inline" id="btnPrint">Print</button>
+      </div>
+      <div class="msg">Codes are always the same for the same number of posters, so a reprint stays valid.</div>
+    </div>
+
+    <div class="labels" id="labelGrid"></div>
+  </div>
+</section>
+
+<script>
+/* ==================================================================
+   CONFIGURATION — edit here, everything else follows
+   ================================================================== */
+const CONFIG = {
+  posters: 40,
+  password: 'committee',
+  askComment: true,
+  criteria: [
+    { id:'merit',  weight:2, name:'Scientific merit and originality',
+      desc:'Relevance of the question and how much the work adds to what is already known.' },
+    { id:'method', weight:2, name:'Methodological soundness',
+      desc:'Design, controls, sample size and statistics appropriate to the question asked.' },
+    { id:'poster', weight:1, name:'Clarity of the poster',
+      desc:'Layout, legibility of the figures, and how clearly the conclusions come across.' },
+    { id:'defence',weight:1, name:'Discussion with the presenter',
+      desc:'Command of the topic and awareness of the limitations of their own work.' }
+  ],
+  anchors: ['poor','outstanding']
+};
+
+/* ---------- codes: deterministic, no ambiguous characters ---------- */
+const ALPHA = 'ACDEFHJKLMNPRTUVWXY34679';
+function prng(seed){let s=seed>>>0;return()=>{s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0;return s/4294967296}}
+function makeCodes(n){
+  const rnd=prng(20260909), seen=new Set(), out=[];
+  while(out.length<n){
+    let c='';for(let i=0;i<4;i++)c+=ALPHA[Math.floor(rnd()*ALPHA.length)];
+    if(!seen.has(c)){seen.add(c);out.push(c);}
+  }
+  return out;
+}
+let CODES = makeCodes(CONFIG.posters);
+const isCode = c => CODES.includes(c);
+
+/* ---------- storage ---------- */
+const K_ME='my:judge', K_MAP='map:posters', K_URL='config:baseurl';
+const kJudge = id => 'judge:'+id;
+async function load(key, shared){
+  try{const r=await window.storage.get(key, shared); return r? JSON.parse(r.value):null;}catch(e){return null;}
+}
+async function save(key, val, shared){ return window.storage.set(key, JSON.stringify(val), shared); }
+
+let ME=null, MINE={}, MAP={}, BASE='';
+const el = id => document.getElementById(id);
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tab').forEach(b=>{
+  if(!b.dataset.go) return;
+  b.onclick=()=>{
+    document.querySelectorAll('.tab[data-go]').forEach(x=>x.setAttribute('aria-selected', x===b));
+    document.querySelectorAll('section').forEach(s=>s.classList.toggle('on', s.id===b.dataset.go));
+    window.scrollTo(0,0);
+  };
+});
+
+/* ==================================================================
+   Evaluator flow
+   ================================================================== */
+const preset = (new URLSearchParams(location.search).get('p')||'').toUpperCase();
+
+(async function boot(){
+  ME = await load(K_ME,false);
+  MAP = (await load(K_MAP,true))||{};
+  BASE = (await load(K_URL,true))||'';
+  if(BASE) el('baseUrl').value = BASE;
+  if(ME){
+    const stored = await load(kJudge(ME.id), true);
+    MINE = stored?.scores || {};
+    if(preset && isCode(preset)){ el('cardWho').hidden=true; el('codeInput').value=preset; openSheet(); }
+    else showCode();
+  }
+  makeLabels();
+})();
+
+el('btnStart').onclick = async ()=>{
+  const name = el('judgeName').value.trim();
+  if(name.length<3){ el('judgeName').focus(); return; }
+  ME = { id:'j'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36), name };
+  await save(K_ME, ME, false);
+  await save(kJudge(ME.id), {name, scores:{}}, true);
+  if(preset && isCode(preset)){ el('cardWho').hidden=true; el('codeInput').value=preset; openSheet(); }
+  else showCode();
+};
+
+function showCode(){
+  el('cardWho').hidden=true; el('cardSheet').hidden=true; el('cardCode').hidden=false;
+  el('codeInput').value=''; el('codeError').innerHTML='';
+  listMine(); el('codeInput').focus();
+}
+
+function listMine(){
+  const done = Object.keys(MINE), box = el('myList');
+  if(!done.length){ box.innerHTML=''; return; }
+  box.innerHTML = '<h3 style="margin-top:1.2rem">You have recorded '+done.length+'</h3><div class="chips">'+
+    done.map(c=>'<span class="chip'+(MINE[c].conflict?' off':'')+'">'+c+(MINE[c].conflict?' · conflict':'')+'</span>').join('')+'</div>';
+}
+
+el('codeInput').addEventListener('input', e=>{
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(e.target.value.length===4) openSheet();
+});
+el('btnOpen').onclick = openSheet;
+
+let active=null, scores={};
+
+function openSheet(){
+  const c = el('codeInput').value.trim().toUpperCase();
+  if(!isCode(c)){
+    el('codeError').innerHTML = '<div class="msg bad">No poster carries that code. Check the label on the panel.</div>';
+    return;
+  }
+  el('codeError').innerHTML = MINE[c]
+    ? '<div class="msg">You already scored '+c+'. Saving again replaces your previous score.</div>' : '';
+  active=c;
+  scores = MINE[c]?.scores ? {...MINE[c].scores} : {};
+  el('codeNow').textContent = c;
+  const v = MAP[c];
+  el('linkedTitle').textContent = v ? [v.title,v.author,v.category].filter(Boolean).join(' · ') : '';
+  el('comment').value = MINE[c]?.comment || '';
+  el('commentBox').hidden = !CONFIG.askComment;
+  drawRubric();
+  el('saveStatus').innerHTML='';
+  el('cardWho').hidden=true; el('cardCode').hidden=true; el('cardSheet').hidden=false;
+  window.scrollTo(0,0);
+}
+
+function drawRubric(){
+  el('rubric').innerHTML = CONFIG.criteria.map(cr=>`
+    <div class="crit">
+      <div class="crit-name">${cr.name}</div>
+      <div class="crit-desc">${cr.desc}</div>
+      <div class="scores" data-crit="${cr.id}">
+        ${[1,2,3,4,5].map(n=>`<button class="score" type="button" data-v="${n}" aria-pressed="false" aria-label="${cr.name}: ${n} out of 5">${n}</button>`).join('')}
+      </div>
+      <div class="anchors"><span>1 · ${CONFIG.anchors[0]}</span><span>5 · ${CONFIG.anchors[1]}</span></div>
+    </div>`).join('');
+  el('rubric').querySelectorAll('.score').forEach(b=>{
+    b.onclick=()=>{
+      const g=b.closest('.scores');
+      scores[g.dataset.crit]=Number(b.dataset.v);
+      paint(g, scores[g.dataset.crit]);
+      el('btnSave').disabled = CONFIG.criteria.some(c=>!scores[c.id]);
+    };
+  });
+  CONFIG.criteria.forEach(cr=>{ if(scores[cr.id]) paint(el('rubric').querySelector(`[data-crit="${cr.id}"]`), scores[cr.id]); });
+  el('btnSave').disabled = CONFIG.criteria.some(c=>!scores[c.id]);
+}
+function paint(group,val){
+  group.querySelectorAll('.score').forEach(x=>{
+    const n=Number(x.dataset.v);
+    x.setAttribute('aria-pressed', n===val);
+    x.classList.toggle('filled', n<val);
+  });
+}
+
+el('btnSwitch').onclick = showCode;
+el('btnSave').onclick = ()=> record({scores, comment: el('comment').value.trim(), conflict:false});
+el('btnConflict').onclick = ()=>{
+  if(confirm('Declare a conflict of interest with poster '+active+'? It will receive no score from you.'))
+    record({scores:null, comment:'', conflict:true});
+};
+
+async function record(data){
+  el('btnSave').disabled=true;
+  MINE[active] = {...data, ts:Date.now()};
+  try{
+    await save(kJudge(ME.id), {name:ME.name, scores:MINE}, true);
+    el('saveStatus').innerHTML = `<div class="done">
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="4" y="13" width="32" height="16" rx="8" fill="#D5E9E3"/>
+        <circle cx="16" cy="19" r="1.9" fill="#063B3A"/><circle cx="24" cy="19" r="1.9" fill="#063B3A"/>
+        <path d="M16 24 q4 4 8 0" stroke="#063B3A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div><strong>${active} recorded.</strong><br>On to the next panel.</div></div>`;
+    setTimeout(showCode, 1300);
+  }catch(e){
+    el('btnSave').disabled=false;
+    el('saveStatus').innerHTML='<div class="msg bad">Nothing was saved. Check the connection and tap save again.</div>';
+  }
+}
+
+/* ==================================================================
+   Results
+   ================================================================== */
+el('btnPass').onclick = async ()=>{
+  if(el('pass').value !== CONFIG.password){
+    el('passError').innerHTML='<div class="msg bad">Wrong password.</div>'; return;
+  }
+  el('cardPass').hidden=true; el('panel').hidden=false; await pull();
+};
+el('btnRefresh').onclick = ()=> pull();
+
+let CACHE=[];
+const wSum = CONFIG.criteria.reduce((s,c)=>s+c.weight,0);
+const weighted = s => CONFIG.criteria.reduce((a,c)=>a+s[c.id]*c.weight,0)/wSum;
+
+async function pull(){
+  el('overview').textContent='Loading…';
+  let keys=[];
+  try{ const r=await window.storage.list('judge:', true); keys=r?.keys||[]; }catch(e){ keys=[]; }
+  const judges=[];
+  for(const k of keys){
+    const d=await load(k,true);
+    if(d) judges.push({id:k.replace('judge:',''), name:d.name, scores:d.scores||{}});
+  }
+  MAP=(await load(K_MAP,true))||{};
+  CACHE=judges; draw(judges);
+}
+
+function draw(judges){
+  const stats = judges.map(j=>{
+    const tot = Object.values(j.scores).filter(v=>!v.conflict&&v.scores).map(v=>weighted(v.scores));
+    const n=tot.length, mean=n?tot.reduce((s,x)=>s+x,0)/n:0;
+    const sd=n>1?Math.sqrt(tot.reduce((s,x)=>s+(x-mean)**2,0)/(n-1)):0;
+    return {...j,n,mean,sd};
+  });
+
+  const byPoster={};
+  stats.forEach(j=>{
+    Object.entries(j.scores).forEach(([code,v])=>{
+      if(v.conflict||!v.scores) return;
+      const t=weighted(v.scores), z=(j.sd>0&&j.n>1)?(t-j.mean)/j.sd:0;
+      (byPoster[code] ||= {code,raw:[],z:[],comments:[]});
+      byPoster[code].raw.push(t); byPoster[code].z.push(z);
+      if(v.comment) byPoster[code].comments.push({name:j.name,text:v.comment});
+    });
+  });
+
+  const mean = a => a.length? a.reduce((s,x)=>s+x,0)/a.length : 0;
+  const rows = Object.values(byPoster).map(p=>({
+    code:p.code, n:p.raw.length, raw:mean(p.raw), z:mean(p.z),
+    spread: p.raw.length>1? Math.max(...p.raw)-Math.min(...p.raw):0,
+    comments:p.comments
+  })).sort((a,b)=> b.z-a.z || b.raw-a.raw);
+
+  const votes = rows.reduce((s,r)=>s+r.n,0);
+  el('overview').textContent = `${votes} scores · ${rows.length} of ${CONFIG.posters} posters scored at least once · ${stats.length} evaluators`;
+
+  el('rankTable').innerHTML = rows.length? `<table>
+    <tr><th class="n">#</th><th>Code</th><th>Work</th><th class="n">Scores</th><th class="n">Raw mean</th><th class="n">Adjusted</th><th class="n">Spread</th></tr>
+    ${rows.map((r,i)=>{
+      const v=MAP[r.code];
+      return `<tr class="${i<3?'top':''}">
+        <td class="n rank">${i+1}</td>
+        <td class="mono">${r.code}</td>
+        <td>${v? (v.title||'')+(v.category?' <span style="color:var(--ink-soft)">· '+v.category+'</span>':'') : '<span style="color:var(--ink-soft)">not linked yet</span>'}</td>
+        <td class="n">${r.n}${r.n<2?' <span title="only one evaluator" style="color:var(--coral)">!</span>':''}</td>
+        <td class="n">${r.raw.toFixed(2)}</td>
+        <td class="n"><strong>${r.z>=0?'+':''}${r.z.toFixed(2)}</strong></td>
+        <td class="n" style="color:${r.spread>=1.5?'var(--coral)':'inherit'}">${r.spread.toFixed(2)}</td>
+      </tr>`;}).join('')}
+  </table>
+  <p class="note" style="margin-top:.7rem">A wide spread means the judges disagreed and is worth a look before the result is final. Posters flagged with ! have been seen by only one evaluator.</p>`
+  : '<div class="msg">No scores yet. The table fills in as soon as the first one is saved.</div>';
+
+  el('judgeTable').innerHTML = stats.length? `<table>
+    <tr><th>Evaluator</th><th class="n">Posters</th><th class="n">Mean</th><th class="n">SD</th></tr>
+    ${stats.sort((a,b)=>b.n-a.n).map(j=>`<tr><td>${j.name}</td><td class="n">${j.n}</td>
+      <td class="n">${j.n?j.mean.toFixed(2):'—'}</td><td class="n">${j.n>1?j.sd.toFixed(2):'—'}</td></tr>`).join('')}
+  </table>` : '<div class="msg">Nobody has registered yet.</div>';
+
+  const cs = rows.flatMap(r=>r.comments.map(c=>({code:r.code,...c})));
+  el('commentList').innerHTML = cs.length? cs.map(c=>
+    `<div style="padding:.6rem 0;border-top:1px solid var(--rule)">
+      <span class="mono">${c.code}</span> <span style="color:var(--ink-soft);font-size:.85rem">· ${c.name}</span>
+      <div style="margin-top:.2rem">${c.text.replace(/</g,'&lt;')}</div></div>`).join('')
+    : '<p class="note">No comments yet.</p>';
+}
+
+el('btnCsv').onclick = ()=>{
+  const out=[['code','title','presenter','category','evaluator',...CONFIG.criteria.map(c=>c.id),'weighted_total','comment']];
+  CACHE.forEach(j=>Object.entries(j.scores).forEach(([code,v])=>{
+    if(v.conflict||!v.scores) return;
+    const m=MAP[code]||{};
+    out.push([code,m.title||'',m.author||'',m.category||'',j.name,
+      ...CONFIG.criteria.map(c=>v.scores[c.id]), weighted(v.scores).toFixed(3),(v.comment||'').replace(/[\n;]/g,' ')]);
+  }));
+  const csv=out.map(l=>l.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a'); a.href=url; a.download='poster-scores.csv'; a.click(); URL.revokeObjectURL(url);
+};
+
+el('btnSaveMap').onclick = async ()=>{
+  const next={};
+  el('mapText').value.split('\n').forEach(l=>{
+    const p=l.split(';').map(s=>s.trim());
+    if(p[0]) next[p[0].toUpperCase()]={title:p[1]||'',author:p[2]||'',category:p[3]||''};
+  });
+  await save(K_MAP,next,true); MAP=next;
+  el('mapStatus').innerHTML='<div class="msg">'+Object.keys(next).length+' posters linked.</div>';
+  draw(CACHE);
+};
+
+/* ==================================================================
+   Print: access QR + panel labels
+   ================================================================== */
+function cleanBase(u){ return u.trim().replace(/[?#].*$/,''); }
+
+el('btnMakeQr').onclick = ()=>{
+  const u = cleanBase(el('baseUrl').value);
+  const box = el('bigQr'); box.innerHTML='';
+  if(!/^https?:\/\/.+/.test(u)){
+    el('urlStatus').innerHTML='<div class="msg bad">Enter the full address, starting with https://</div>'; return;
+  }
+  el('urlStatus').innerHTML='';
+  new QRCode(box,{text:u,width:230,height:230,correctLevel:QRCode.CorrectLevel.M});
+};
+
+el('btnSaveUrl').onclick = async ()=>{
+  BASE = cleanBase(el('baseUrl').value);
+  await save(K_URL, BASE, true);
+  el('urlStatus').innerHTML='<div class="msg">Address saved. Panel labels now encode direct links.</div>';
+  makeLabels();
+};
+
+function makeLabels(){
+  const n = Math.max(1, Math.min(300, parseInt(el('labelCount').value)||CONFIG.posters));
+  CONFIG.posters = n; CODES = makeCodes(n);
+  const grid = el('labelGrid'); grid.innerHTML='';
+  CODES.forEach((c,i)=>{
+    const cell=document.createElement('div'); cell.className='label';
+    const q=document.createElement('div'); cell.appendChild(q);
+    const t=document.createElement('div');
+    t.innerHTML='<div class="short">'+c+'</div><div class="seq">poster '+String(i+1).padStart(3,'0')+'</div>';
+    cell.appendChild(t); grid.appendChild(cell);
+    const payload = BASE ? BASE+'?p='+c : c;
+    new QRCode(q,{text:payload,width:112,height:112,correctLevel:QRCode.CorrectLevel.H});
+  });
+}
+el('btnMake').onclick = makeLabels;
+el('btnPrint').onclick = ()=>{ if(!el('labelGrid').children.length) makeLabels(); window.print(); };
+</script>
+</html>
